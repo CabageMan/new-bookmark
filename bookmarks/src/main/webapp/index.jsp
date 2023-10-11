@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JSP - Hello World</title>
+  <title>Bookmarks</title>
 </head>
 <body>
-<h1><%= "Hello World!" %></h1>
+<h1><%= "Welcome to Bookmarks!" %></h1>
 <br/>
-<a href="hello-servlet">Hello Servlet</a>
+<a href="bookmark-info">Go to info page</a>
 </body>
 </html>
