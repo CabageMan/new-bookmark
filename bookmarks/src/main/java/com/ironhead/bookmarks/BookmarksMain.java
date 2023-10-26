@@ -15,13 +15,10 @@ public class BookmarksMain extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
 
-        int test = 'A' + 3;
-        int testNew = 'A' + 5;
-
         // Hello
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
-        out.println("<h1>" + message + test + testNew + "</h1>");
+        out.println("<h1>" + message + "</h1>");
         out.println("</body></html>");
     }
 
