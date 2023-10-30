@@ -2,12 +2,13 @@ package com.ironhead.bookmarks;
 
 import java.io.*;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 @WebServlet(name = "bookmarksList", value = "/bookmarks-list")
-public class BookmarksMain extends HttpServlet {
+public class BookmarksListServlet extends HttpServlet {
   private static final String BUTTON_PARAMETER = "button";
   private static final String ADD_BOOKMARK_BUTTON = "addBookmark";
   private static final String SEARCH_BOOKMARK_BUTTON = "searchBookmarks";
@@ -23,7 +24,9 @@ public class BookmarksMain extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        response.setContentType("text/html");
+    response.setContentType("text/html");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bookmarksList.jsp");
+    requestDispatcher.include(request, response);
 //
 //        // Hello
 //        PrintWriter out = response.getWriter();
@@ -42,7 +45,7 @@ public class BookmarksMain extends HttpServlet {
     if (buttonValue.equals(ADD_BOOKMARK_BUTTON)) {
       String newBookmarkTitle = request.getParameter(BOOKMARK_TITLE_FIELD);
       String newBookmarkDescription = request.getParameter(BOOKMARK_DESCRIPTION_FIELD);
-      System.out.println("Add Bookmark " + "\"" + newBookmarkTitle + "\"" + ":\n" + newBookmarkDescription) ;
+      System.out.println("Add Bookmark " + "\"" + newBookmarkTitle + "\"" + ":\n" + newBookmarkDescription);
     } else if (buttonValue.equals(SEARCH_BOOKMARK_BUTTON)) {
       String bookmarkTitle = request.getParameter(SEARCH_BOOKMARK_FIELD);
       System.out.println("Need to find " + "\"" + bookmarkTitle + "\"" + " bookmark.");
@@ -93,10 +96,10 @@ public class BookmarksMain extends HttpServlet {
     //Return changed bookmarks list
 //            request.setAttribute("list", getBookmarks(""));
 
-    request.getRequestDispatcher("/").forward(request, response);
+    request.getRequestDispatcher("/bookmarks-list").include(request, response);
   }
 
   public void destroy() {
-    System.out.println("Destroy is called");
+    System.out.println("List Servlet Destroy is called");
   }
 }
