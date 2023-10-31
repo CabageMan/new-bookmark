@@ -6,16 +6,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
-@WebServlet(name = "bookmarkInfo", value = "/bookmark-info")
-public class BookmarkInfoServlet extends HttpServlet {
+@WebServlet(name = "bookmarkEdit", value = "/bookmark-edit")
+public class BookmarkEditServlet extends HttpServlet {
   private static final String BUTTON_PARAMETER = "button";
-  private static final String DELETE_BOOKMARK_BUTTON = "deleteBookmark";
-  private static final String EDIT_BOOKMARK_BUTTON = "editBookmark";
+  private static final String UPDATE_BOOKMARK_BUTTON = "updateBookmark";
+  private static final String BOOKMARK_TITLE_FIELD = "bookmarkTitle";
+  private static final String BOOKMARK_DESCRIPTION_FIELD = "bookmarkDescription";
 
   public void init() {
-    System.out.println("Init Bookmarks Info servlet");
+    System.out.println("Init Bookmark Edit servlet");
   }
 
   @Override
@@ -31,19 +33,19 @@ public class BookmarkInfoServlet extends HttpServlet {
     request.setCharacterEncoding("UTF-8");
     String buttonValue = request.getParameter(BUTTON_PARAMETER);
 
-    if (buttonValue.equals(DELETE_BOOKMARK_BUTTON)) {
+    if (buttonValue.equals(UPDATE_BOOKMARK_BUTTON)) {
       System.out.println("Delete Bookmark");
+      String newBookmarkTitle = request.getParameter(BOOKMARK_TITLE_FIELD);
+      String newBookmarkDescription = request.getParameter(BOOKMARK_DESCRIPTION_FIELD);
+      System.out.println("Update Bookmark " + "\"" + newBookmarkTitle + "\"" + ":\n" + newBookmarkDescription);
       request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
-    } else if (buttonValue.equals(EDIT_BOOKMARK_BUTTON)) {
-      System.out.println("Edit Bookmark");
-      request.getRequestDispatcher("/bookmarkEdit.jsp").forward(request, response);
     } else {
-      System.out.println("BookmarkInfo: Something went wrong");
-      request.getRequestDispatcher("/bookmarkInfo.jsp").include(request, response);
+      System.out.println("BookmarkEdit: Something went wrong");
+      request.getRequestDispatcher("/bookmarkEdit.jsp").include(request, response);
     }
   }
 
   public void destroy() {
-    System.out.println("Bookmark Info Servlet Destroy is called");
+    System.out.println("Bookmark Edit Servlet Destroy is called");
   }
 }

@@ -19,7 +19,7 @@ public class BookmarksListServlet extends HttpServlet {
   private String message;
 
   public void init() {
-    message = "Bookmark info:";
+    System.out.println("Init BookmarksList servlet");
   }
 
   @Override
@@ -33,7 +33,7 @@ public class BookmarksListServlet extends HttpServlet {
 //        out.println("<html><body>");
 //        out.println("<h1>" + message + "</h1>");
 //        out.println("</body></html>");
-    System.out.println("Do Get");
+    System.out.println("Bookmarks List Do Get");
   }
 
   @Override
@@ -50,7 +50,7 @@ public class BookmarksListServlet extends HttpServlet {
       String bookmarkTitle = request.getParameter(SEARCH_BOOKMARK_FIELD);
       System.out.println("Need to find " + "\"" + bookmarkTitle + "\"" + " bookmark.");
     } else {
-      System.out.println("Something went wrong");
+      System.out.println("BookmarksList: Something went wrong");
     }
 
 //        request.getRequestDispatcher("/WEB-INF/some-result.jsp").forward(request, response);
@@ -96,7 +96,7 @@ public class BookmarksListServlet extends HttpServlet {
     //Return changed bookmarks list
 //            request.setAttribute("list", getBookmarks(""));
 
-    request.getRequestDispatcher("/bookmarks-list").include(request, response);
+    request.getRequestDispatcher("/bookmarksList.jsp").include(request, response);
   }
 
   public void destroy() {

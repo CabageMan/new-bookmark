@@ -16,6 +16,18 @@
 <h1><%= "Bookmark Info" %></h1>
 <br/>
 
+<h3>Title</h3>
+<p><%= "Bookmark Title" %></p>
+<h3>Description</h3>
+<p><%= "Bookmark Description" %></p>
+
+<br/>
+
+<form action="${pageContext.request.contextPath}/bookmark-info" method="post">
+    <button type="submit" name="button" value="deleteBookmark">Delete</button>
+    <button type="submit" name="button" value="editBookmark">Edit</button>
+</form>
+
 <a href="bookmarks-list">View all bookmarks</a>
 </body>
 </html>
