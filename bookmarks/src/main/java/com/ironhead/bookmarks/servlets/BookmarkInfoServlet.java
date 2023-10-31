@@ -1,4 +1,4 @@
-package com.ironhead.bookmarks;
+package com.ironhead.bookmarks.servlets;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;

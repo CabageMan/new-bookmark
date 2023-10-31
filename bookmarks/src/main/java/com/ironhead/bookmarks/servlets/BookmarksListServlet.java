@@ -1,7 +1,8 @@
-package com.ironhead.bookmarks;
+package com.ironhead.bookmarks.servlets;
 
 import java.io.*;
 
+import com.ironhead.bookmarks.datasource.DataSource;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -19,6 +20,8 @@ public class BookmarksListServlet extends HttpServlet {
   private String message;
 
   public void init() {
+    DataSource dataSource = new DataSource();
+    dataSource.open();
     System.out.println("Init BookmarksList servlet");
   }
 

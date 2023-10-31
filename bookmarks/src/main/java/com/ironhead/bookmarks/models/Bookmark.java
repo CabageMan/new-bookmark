@@ -1,4 +1,4 @@
-package com.ironhead.bookmarks;
+package com.ironhead.bookmarks.models;
 
 public class Bookmark {
   private String title;
