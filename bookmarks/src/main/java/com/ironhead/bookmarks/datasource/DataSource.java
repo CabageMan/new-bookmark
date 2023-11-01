@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DataSource {
   private static final String DB_NAME = "bookmarks.db";
-  private static final String CONNECTION_STRING = "jdbc:sqlite:../../../../../../.././" + DB_NAME;
+  private static final String CONNECTION_STRING = "jdbc:sqlite:/opt/tomcat/webapps/dataBases/" + DB_NAME;
   private static final String BOOKMARKS_TABLE_NAME = "bookmarks";
   private static final String COLUMN_TITLE = "title";
   private static final String COLUMN_DESCRIPTION = "description";
@@ -15,7 +15,6 @@ public class DataSource {
   // METHODS
   public boolean open() {
     try {
-
       connection = DriverManager.getConnection(CONNECTION_STRING);
       Statement statement = connection.createStatement();
       statement.execute("DROP TABLE IF EXISTS " + BOOKMARKS_TABLE_NAME);

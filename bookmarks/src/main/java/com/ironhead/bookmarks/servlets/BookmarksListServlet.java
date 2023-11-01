@@ -20,6 +20,12 @@ public class BookmarksListServlet extends HttpServlet {
   private String message;
 
   public void init() {
+//    try {
+//
+//      System.out.println(new File(".").getCanonicalPath());
+//    } catch (IOException e) {
+//      System.out.println("File exception: " + e.getMessage());
+//    }
     DataSource dataSource = new DataSource();
     dataSource.open();
     System.out.println("Init BookmarksList servlet");
