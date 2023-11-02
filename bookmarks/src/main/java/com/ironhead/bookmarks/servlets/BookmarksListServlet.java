@@ -1,8 +1,10 @@
 package com.ironhead.bookmarks.servlets;
 
 import java.io.*;
+import java.util.ArrayList;
 
 import com.ironhead.bookmarks.datasource.DataSource;
+import com.ironhead.bookmarks.models.Bookmark;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -17,32 +19,25 @@ public class BookmarksListServlet extends HttpServlet {
   private static final String BOOKMARK_DESCRIPTION_FIELD = "bookmarkDescription";
   private static final String SEARCH_BOOKMARK_FIELD = "searchByTitle";
 
-  private String message;
+  private DataSource dataSource;
 
   public void init() {
-//    try {
-//
-//      System.out.println(new File(".").getCanonicalPath());
-//    } catch (IOException e) {
-//      System.out.println("File exception: " + e.getMessage());
-//    }
-    DataSource dataSource = new DataSource();
-    dataSource.open();
     System.out.println("Init BookmarksList servlet");
+
+    this.dataSource = DataSource.getInstance();
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    ArrayList<Bookmark> bookmarks = dataSource.queryBookmarks();
+    System.out.println("Bookmarks List Do Get: " + bookmarks.toString());
+
+//    String[] testTitles = {"first", "second", "third", "fourth"};
+
     response.setContentType("text/html");
+//    request.setAttribute("list", testTitles);
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bookmarksList.jsp");
     requestDispatcher.include(request, response);
-//
-//        // Hello
-//        PrintWriter out = response.getWriter();
-//        out.println("<html><body>");
-//        out.println("<h1>" + message + "</h1>");
-//        out.println("</body></html>");
-    System.out.println("Bookmarks List Do Get");
   }
 
   @Override
@@ -52,12 +47,14 @@ public class BookmarksListServlet extends HttpServlet {
     String buttonValue = request.getParameter(BUTTON_PARAMETER);
 
     if (buttonValue.equals(ADD_BOOKMARK_BUTTON)) {
-      String newBookmarkTitle = request.getParameter(BOOKMARK_TITLE_FIELD);
-      String newBookmarkDescription = request.getParameter(BOOKMARK_DESCRIPTION_FIELD);
-      System.out.println("Add Bookmark " + "\"" + newBookmarkTitle + "\"" + ":\n" + newBookmarkDescription);
+      dataSource.addBookmark(
+              request.getParameter(BOOKMARK_TITLE_FIELD),
+              request.getParameter(BOOKMARK_DESCRIPTION_FIELD)
+      );
     } else if (buttonValue.equals(SEARCH_BOOKMARK_BUTTON)) {
       String bookmarkTitle = request.getParameter(SEARCH_BOOKMARK_FIELD);
-      System.out.println("Need to find " + "\"" + bookmarkTitle + "\"" + " bookmark.");
+      ArrayList<Bookmark> bookmarks = dataSource.queryBookmarksByTitle(bookmarkTitle);
+      System.out.println("Found bookmarks " + bookmarks.toString());
     } else {
       System.out.println("BookmarksList: Something went wrong");
     }
