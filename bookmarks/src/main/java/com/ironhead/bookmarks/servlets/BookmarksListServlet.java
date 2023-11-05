@@ -30,14 +30,13 @@ public class BookmarksListServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     ArrayList<Bookmark> bookmarks = dataSource.queryBookmarks();
-    System.out.println("Bookmarks List Do Get: " + bookmarks.toString());
-
-//    String[] testTitles = {"first", "second", "third", "fourth"};
 
     response.setContentType("text/html");
-//    request.setAttribute("list", testTitles);
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bookmarksList.jsp");
-    requestDispatcher.include(request, response);
+
+    request.setAttribute("bookmarks", bookmarks);
+
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("bookmarksList.jsp");
+    requestDispatcher.forward(request, response);
   }
 
   @Override
@@ -59,50 +58,11 @@ public class BookmarksListServlet extends HttpServlet {
       System.out.println("BookmarksList: Something went wrong");
     }
 
-//        request.getRequestDispatcher("/WEB-INF/some-result.jsp").forward(request, response);
+    // Improve this! 
+    ArrayList<Bookmark> bookmarks = dataSource.queryBookmarks();
+    request.setAttribute("bookmarks", bookmarks);
 
-//        if (request.getParameter("saveBookmark") != null ||
-//                request.getParameter("title") != null ||
-//                request.getParameter("content") != null) {
-//
-//            try {
-//                //Send to database new bookmark and return changed list of bookmarks
-//                BookMark bookmark = new BookMark(0, request.getParameter("title"), request.getParameter("content"));
-//                BookMarksModel.addBookmark(bookmark);
-//                request.setAttribute("list", getBookmarks(""));
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-
-//            request.getRequestDispatcher("/").forward(request, response);
-//
-//        } else if (request.getParameter("filterBookmarks") != null ||
-//                    request.getParameter("filter") != null) {
-//            // Get filtered list of bookmarks by substring
-//            request.setAttribute("list", getBookmarks(request.getParameter("filter")));
-//
-//            request.getRequestDispatcher("/").forward(request, response);
-//
-//        } else if (request.getParameter("deleteBookmark") != null) {
-//
-//            if (request.getParameter("delete") != null && !request.getParameter("delete").isEmpty()) {
-//                try {
-//                    //Call delete method with ID of deleting bookmark
-//                    BookMarksModel.deleteBookmark(Integer.parseInt(request.getParameter("delete")));
-//                } catch (ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-
-    //Return changed bookmarks list
-//            request.setAttribute("list", getBookmarks(""));
-
-    request.getRequestDispatcher("/bookmarksList.jsp").include(request, response);
+    request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
   }
 
   public void destroy() {

@@ -5,6 +5,9 @@
   Time: 6:42 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@page import="java.util.List"%>
+<%@page import="com.ironhead.bookmarks.models.Bookmark"%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -41,15 +44,35 @@
 </form>
 <br/>
 
-<%--    <c:set var="bookmarksList" value="${list}"/>--%>
+<table border="1">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+        int i = 1;
+        List<Bookmark> bookmarks = (List) request.getAttribute("bookmarks");
+    %>
 
-<%-- <c:forEach var="num" items="${bookmark}"> --%>
-<%-- <c:out value="${num}"/> --%>
-<%-- </c:forEach> --%>
+    <%
+        for (Bookmark bookmark : bookmarks) {
+    %>
+    <tr>
+        <td><%=i++%></td>
+        <td><%=bookmark.getTitle()%></td>
+        <td><%=bookmark.getInfo()%></td>
+    </tr>
+    <%
+        }
+    %>
+    </tbody>
+</table>
 
-<%--    <ul>--%>
-<%--        ${bookmarksList}--%>
-<%--    </ul>--%>
+
 <ul>
     <li><a href="bookmark-info">User bookmark info</a></li>
 </ul>
