@@ -54,7 +54,6 @@
     </thead>
     <tbody>
     <%
-        int i = 1;
         List<Bookmark> bookmarks = (List) request.getAttribute("bookmarks");
     %>
 
@@ -62,7 +61,7 @@
         for (Bookmark bookmark : bookmarks) {
     %>
     <tr>
-        <td><%=i++%></td>
+        <td><%=bookmark.getId()%></td>
         <td><%=bookmark.getTitle()%></td>
         <td><%=bookmark.getInfo()%></td>
     </tr>

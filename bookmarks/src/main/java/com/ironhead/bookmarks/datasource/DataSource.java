@@ -13,12 +13,14 @@ public class DataSource {
   }
 
   private static final String DB_NAME = "bookmarks.db";
+  // May be it's possible to use localhost int the path to database
   private static final String CONNECTION_STRING = "jdbc:sqlite:/opt/tomcat/webapps/dataBases/" + DB_NAME;
   private static final String TABLE_BOOKMARKS = "bookmarks";
-  private static final String COLUMN_ID = "_id";
+  private static final String COLUMN_ID = "rowid";
   private static final String COLUMN_TITLE = "title";
   private static final String COLUMN_DESCRIPTION = "description";
-  public static final String QUERY_BOOKMARKS_BY_TITLE = "SELECT * FROM " +
+  public static final String QUERY_BOOKMARKS_BY_TITLE = "SELECT " +
+          COLUMN_ID + ", " + COLUMN_TITLE + ", " + COLUMN_DESCRIPTION + " FROM " +
           TABLE_BOOKMARKS + " WHERE " + COLUMN_TITLE + " = ?" + " ORDER BY " +
           TABLE_BOOKMARKS + "." + COLUMN_TITLE + " ASC";
   public static final String INSERT_BOOKMARK = "INSERT INTO " + TABLE_BOOKMARKS +
@@ -27,8 +29,6 @@ public class DataSource {
   private Connection connection;
   private PreparedStatement queryBookmarksByTitle;
   private PreparedStatement insertIntoBookmarks;
-
-//  querySongInfoView = connection.prepareStatement(QUERY_VIEW_SONG_INFO_PREP);
 
   // Life Cycle
   private DataSource() {
@@ -80,14 +80,16 @@ public class DataSource {
   // METHODS
   public ArrayList<Bookmark> queryBookmarks() {
     try (Statement statement = connection.createStatement();
-         ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_BOOKMARKS +
-                 " ORDER BY " + TABLE_BOOKMARKS + "." + COLUMN_TITLE + " ASC")
+         ResultSet results = statement.executeQuery("SELECT " +
+                 COLUMN_ID + ", " + COLUMN_TITLE + ", " + COLUMN_DESCRIPTION +
+                 " FROM " + TABLE_BOOKMARKS)
     ) {
       ArrayList<Bookmark> bookmarks = new ArrayList<>();
       while (results.next()) {
         Bookmark artist = new Bookmark(
-                results.getString(1),
-                results.getString(2)
+                results.getInt(1),
+                results.getString(2),
+                results.getString(3)
         );
         bookmarks.add(artist);
       }
@@ -102,18 +104,18 @@ public class DataSource {
     try {
       queryBookmarksByTitle.setString(1, title);
       ResultSet results = queryBookmarksByTitle.executeQuery();
-      System.out.println("Results: " + results);
       ArrayList<Bookmark> bookmarks = new ArrayList<>();
       while (results.next()) {
-        Bookmark artist = new Bookmark(
-                results.getString(1),
-                results.getString(2)
+        Bookmark bookmark = new Bookmark(
+                results.getInt(1),
+                results.getString(2),
+                results.getString(3)
         );
-        bookmarks.add(artist);
+        bookmarks.add(bookmark);
       }
       return bookmarks;
     } catch (SQLException e) {
-      System.out.println("Query failed: " + e.getMessage());
+      System.out.println("Query by title failed: " + e.getMessage());
       return null;
     }
   }

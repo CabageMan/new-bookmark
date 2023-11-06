@@ -44,24 +44,23 @@ public class BookmarksListServlet extends HttpServlet {
     request.setCharacterEncoding("UTF-8");
 
     String buttonValue = request.getParameter(BUTTON_PARAMETER);
+    ArrayList<Bookmark> bookmarks = new ArrayList<>();
 
     if (buttonValue.equals(ADD_BOOKMARK_BUTTON)) {
       dataSource.addBookmark(
               request.getParameter(BOOKMARK_TITLE_FIELD),
               request.getParameter(BOOKMARK_DESCRIPTION_FIELD)
       );
+      // Improve this!
+      bookmarks = dataSource.queryBookmarks();
     } else if (buttonValue.equals(SEARCH_BOOKMARK_BUTTON)) {
       String bookmarkTitle = request.getParameter(SEARCH_BOOKMARK_FIELD);
-      ArrayList<Bookmark> bookmarks = dataSource.queryBookmarksByTitle(bookmarkTitle);
-      System.out.println("Found bookmarks " + bookmarks.toString());
+      bookmarks = (bookmarkTitle == null || bookmarkTitle.isEmpty()) ? dataSource.queryBookmarks() : dataSource.queryBookmarksByTitle(bookmarkTitle);
     } else {
       System.out.println("BookmarksList: Something went wrong");
     }
 
-    // Improve this! 
-    ArrayList<Bookmark> bookmarks = dataSource.queryBookmarks();
     request.setAttribute("bookmarks", bookmarks);
-
     request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
   }
 
