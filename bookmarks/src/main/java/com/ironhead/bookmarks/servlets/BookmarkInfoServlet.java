@@ -10,6 +10,7 @@ import java.io.IOException;
 
 @WebServlet(name = "bookmarkInfo", value = "/bookmark-info")
 public class BookmarkInfoServlet extends HttpServlet {
+  public static final String BOOKMARK_ID_PARAMETER = "bookmarkId";
   private static final String BUTTON_PARAMETER = "button";
   private static final String DELETE_BOOKMARK_BUTTON = "deleteBookmark";
   private static final String EDIT_BOOKMARK_BUTTON = "editBookmark";
@@ -22,8 +23,10 @@ public class BookmarkInfoServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html");
     RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bookmarkInfo.jsp");
+    String bookmarkId = request.getParameter(BOOKMARK_ID_PARAMETER);
+    System.out.println("Bookmark Info Do Get By ID: " + bookmarkId);
+    
     requestDispatcher.include(request, response);
-    System.out.println("Bookmark Info Do Get");
   }
 
   @Override

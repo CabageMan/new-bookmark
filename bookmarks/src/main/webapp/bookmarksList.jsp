@@ -53,28 +53,19 @@
     </tr>
     </thead>
     <tbody>
-    <%
-        List<Bookmark> bookmarks = (List) request.getAttribute("bookmarks");
-    %>
+    <% List<Bookmark> bookmarks = (List) request.getAttribute("bookmarks"); %>
 
-    <%
-        for (Bookmark bookmark : bookmarks) {
-    %>
+    <% for (Bookmark bookmark : bookmarks) { %>
     <tr>
         <td><%=bookmark.getId()%></td>
-        <td><%=bookmark.getTitle()%></td>
+        <td>
+            <a href="bookmark-info?bookmarkId=<%=bookmark.getId()%>>"><%=bookmark.getTitle()%></a>
+        </td>
         <td><%=bookmark.getInfo()%></td>
     </tr>
-    <%
-        }
-    %>
+    <% } %>
     </tbody>
 </table>
-
-
-<ul>
-    <li><a href="bookmark-info">User bookmark info</a></li>
-</ul>
 
 </body>
 </html>
