@@ -5,7 +5,7 @@
   Time: 11:50 AM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.ironhead.bookmarks.models.Bookmark" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,17 +13,18 @@
 </head>
 <body>
 
-<h1><%= "Edit Bookmark" %></h1>
+<h1>Edit Bookmark</h1>
 <br/>
 
-<form action="${pageContext.request.contextPath}/bookmark-edit" method="post">
-    <label for="bookmarkTitle">Add new bookmark:</label>
+<% Bookmark bookmark = (Bookmark) request.getAttribute("bookmark"); %>
+<form action="${pageContext.request.contextPath}/bookmark-edit?bookmarkId=<%=bookmark.getId()%>" method="post">
+    <label for="bookmarkTitle">Change bookmark title:</label>
     <br/>
-    <input type="text" name="bookmarkTitle" id="bookmarkTitle" placeholder="Enter new bookmark title">
+    <input type="text" name="bookmarkTitle" id="bookmarkTitle" value="<%=bookmark.getTitle()%>" placeholder="Enter new bookmark title">
     <br/>
-    <label for="bookmarkDescription">Bookmark:</label>
+    <label for="bookmarkDescription">Change bookmark description:</label>
     <br/>
-    <textarea id="bookmarkDescription" name="bookmarkDescription" placeholder="Enter your bookmark..." rows="5"></textarea>
+    <textarea id="bookmarkDescription" name="bookmarkDescription" placeholder="Enter your bookmark..." rows="5"><%=bookmark.getInfo()%></textarea>
     <br/>
     <button type="submit" name="button" value="updateBookmark">Add Bookmark</button>
 </form>

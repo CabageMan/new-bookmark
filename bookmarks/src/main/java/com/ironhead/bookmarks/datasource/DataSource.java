@@ -23,11 +23,15 @@ public class DataSource {
           COLUMN_ID + ", " + COLUMN_TITLE + ", " + COLUMN_DESCRIPTION + " FROM " +
           TABLE_BOOKMARKS + " WHERE " + COLUMN_TITLE + " = ?" + " ORDER BY " +
           TABLE_BOOKMARKS + "." + COLUMN_TITLE + " ASC";
+
+  public static final String QUERY_BOOKMARKS_BY_ID = "SELECT " +
+          COLUMN_ID + ", * FROM " + TABLE_BOOKMARKS + " WHERE " + COLUMN_ID + " = ?";
   public static final String INSERT_BOOKMARK = "INSERT INTO " + TABLE_BOOKMARKS +
           " (" + COLUMN_TITLE + ", " + COLUMN_DESCRIPTION + ") VALUES(?, ?)";
 
   private Connection connection;
   private PreparedStatement queryBookmarksByTitle;
+  private PreparedStatement queryBookmarkById;
   private PreparedStatement insertIntoBookmarks;
 
   // Life Cycle
@@ -43,6 +47,10 @@ public class DataSource {
     return dataSourceInstance;
   }
 
+  public void removeInstance() {
+    close();
+  }
+
   private boolean open() {
     try {
       this.connection = DriverManager.getConnection(CONNECTION_STRING);
@@ -52,6 +60,8 @@ public class DataSource {
               " (" + COLUMN_TITLE + " TEXT, " + COLUMN_DESCRIPTION + " TEXT " + ")");
       insertIntoBookmarks = connection.prepareStatement(INSERT_BOOKMARK);
       queryBookmarksByTitle = connection.prepareStatement(QUERY_BOOKMARKS_BY_TITLE);
+      queryBookmarkById = connection.prepareStatement(QUERY_BOOKMARKS_BY_ID);
+      System.out.println("Open Connection");
       return true;
     } catch (SQLException e) {
       System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -68,9 +78,13 @@ public class DataSource {
       if (queryBookmarksByTitle != null) {
         queryBookmarksByTitle.close();
       }
+      if (queryBookmarkById != null) {
+        queryBookmarkById.close();
+      }
       if (connection != null) {
         connection.close();
       }
+      System.out.println("Close Connection");
     } catch (SQLException e) {
       System.out.println("Couldn't close connection: " + e.getMessage());
       e.printStackTrace();
@@ -87,7 +101,7 @@ public class DataSource {
       ArrayList<Bookmark> bookmarks = new ArrayList<>();
       while (results.next()) {
         Bookmark artist = new Bookmark(
-                results.getInt(1),
+                results.getLong(1),
                 results.getString(2),
                 results.getString(3)
         );
@@ -107,7 +121,7 @@ public class DataSource {
       ArrayList<Bookmark> bookmarks = new ArrayList<>();
       while (results.next()) {
         Bookmark bookmark = new Bookmark(
-                results.getInt(1),
+                results.getLong(1),
                 results.getString(2),
                 results.getString(3)
         );
@@ -130,6 +144,44 @@ public class DataSource {
     return true;
   }
 
+  public Bookmark queryBookmarkByID(long bookmarkId) {
+    try {
+      queryBookmarkById.setLong(1, bookmarkId);
+      ResultSet results = queryBookmarkById.executeQuery();
+      if (results.next()) {
+        return new Bookmark(
+                results.getLong(1),
+                results.getString(2),
+                results.getString(3)
+        );
+      }
+      return null;
+    } catch (SQLException e) {
+      System.out.println("Couldn't get Bookmark by ID: " + e);
+      return null;
+    }
+  }
+
+  public boolean updateBookmark(Bookmark bookmark) {
+    try {
+      updateBookmark(bookmark.getId(), bookmark.getTitle(), bookmark.getInfo());
+      return true;
+    } catch (SQLException e) {
+      System.out.println("Couldn't update bookmark: " + e.getMessage());
+      return false;
+    }
+  }
+
+  public boolean deleteBookmark(Bookmark bookmark) {
+    try {
+      deleteBookmark(bookmark.getId());
+      return true;
+    } catch (SQLException e) {
+      System.out.println("Couldn't delete bookmark: " + e.getMessage());
+      return false;
+    }
+  }
+
   private void insertBookmark(String title, String description) throws SQLException {
     insertIntoBookmarks.setString(1, title);
     insertIntoBookmarks.setString(2, description);
@@ -137,5 +189,24 @@ public class DataSource {
     if (affectedRows != 1) { // Only one bookmark should be added
       throw new SQLException("Couldn't insert bookmark");
     }
+  }
+
+  private void updateBookmark(long id, String title, String info) throws SQLException {
+    System.out.println("Update by ID: " + id + "\nTitle: " + title + "\nInfo: " + info);
+//    insertIntoBookmarks.setString(1, title);
+//    insertIntoBookmarks.setString(2, description);
+//    int affectedRows = insertIntoBookmarks.executeUpdate();
+//    if (affectedRows != 1) { // Only one bookmark should be added
+//      throw new SQLException("Couldn't insert bookmark");
+//    }
+  }
+
+  private void deleteBookmark(long bookmarkId) throws SQLException {
+//    insertIntoBookmarks.setString(1, title);
+//    insertIntoBookmarks.setString(2, description);
+//    int affectedRows = insertIntoBookmarks.executeUpdate();
+//    if (affectedRows != 1) { // Only one bookmark should be added
+//      throw new SQLException("Couldn't insert bookmark");
+//    }
   }
 }

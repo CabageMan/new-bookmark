@@ -1,5 +1,7 @@
 package com.ironhead.bookmarks.servlets;
 
+import com.ironhead.bookmarks.datasource.DataSource;
+import com.ironhead.bookmarks.models.Bookmark;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,14 +18,16 @@ public class BookmarkEditServlet extends HttpServlet {
   private static final String BOOKMARK_TITLE_FIELD = "bookmarkTitle";
   private static final String BOOKMARK_DESCRIPTION_FIELD = "bookmarkDescription";
 
+  private DataSource dataSource;
+
   public void init() {
-    System.out.println("Init Bookmark Edit servlet");
+    this.dataSource = DataSource.getInstance();
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html");
-    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bookmarkInfo.jsp");
+    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bookmarkEdit.jsp");
     requestDispatcher.include(request, response);
     System.out.println("Bookmark Info Do Get");
   }
@@ -32,12 +36,14 @@ public class BookmarkEditServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     request.setCharacterEncoding("UTF-8");
     String buttonValue = request.getParameter(BUTTON_PARAMETER);
+    String bookmarkIdParam = request.getParameter("bookmarkId");
 
-    if (buttonValue.equals(UPDATE_BOOKMARK_BUTTON)) {
-      System.out.println("Delete Bookmark");
-      String newBookmarkTitle = request.getParameter(BOOKMARK_TITLE_FIELD);
-      String newBookmarkDescription = request.getParameter(BOOKMARK_DESCRIPTION_FIELD);
-      System.out.println("Update Bookmark " + "\"" + newBookmarkTitle + "\"" + ":\n" + newBookmarkDescription);
+    if (buttonValue.equals(UPDATE_BOOKMARK_BUTTON) || bookmarkIdParam != null) {
+      long bookmarkId = Long.parseLong(bookmarkIdParam);
+      String bookmarkTitle = request.getParameter(BOOKMARK_TITLE_FIELD);
+      String bookmarkDescription = request.getParameter(BOOKMARK_DESCRIPTION_FIELD);
+      Bookmark updatedBookmark = new Bookmark(bookmarkId, bookmarkTitle, bookmarkDescription);
+      dataSource.updateBookmark(updatedBookmark);
       request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
     } else {
       System.out.println("BookmarkEdit: Something went wrong");

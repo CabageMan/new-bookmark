@@ -65,6 +65,7 @@ public class BookmarksListServlet extends HttpServlet {
   }
 
   public void destroy() {
+    dataSource.removeInstance();
     System.out.println("List Servlet Destroy is called");
   }
 }

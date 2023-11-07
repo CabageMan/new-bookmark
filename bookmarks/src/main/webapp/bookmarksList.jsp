@@ -59,7 +59,7 @@
     <tr>
         <td><%=bookmark.getId()%></td>
         <td>
-            <a href="bookmark-info?bookmarkId=<%=bookmark.getId()%>>"><%=bookmark.getTitle()%></a>
+            <a href="bookmark-info?bookmarkId=<%=bookmark.getId()%>"><%=bookmark.getTitle()%></a>
         </td>
         <td><%=bookmark.getInfo()%></td>
     </tr>
