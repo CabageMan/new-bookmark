@@ -28,11 +28,17 @@ public class DataSource {
           COLUMN_ID + ", * FROM " + TABLE_BOOKMARKS + " WHERE " + COLUMN_ID + " = ?";
   public static final String INSERT_BOOKMARK = "INSERT INTO " + TABLE_BOOKMARKS +
           " (" + COLUMN_TITLE + ", " + COLUMN_DESCRIPTION + ") VALUES(?, ?)";
-
+  public static final String UPDATE_BOOKMARK = "UPDATE " + TABLE_BOOKMARKS + " SET " +
+          COLUMN_TITLE + " = ?" + ", " + COLUMN_DESCRIPTION + " = ?" +
+          " WHERE " + COLUMN_ID + " = ?";
+  public static final String DELETE_BOOKMARK = "DELETE FROM " + TABLE_BOOKMARKS +
+          " WHERE " + COLUMN_ID + " = ?";
   private Connection connection;
   private PreparedStatement queryBookmarksByTitle;
   private PreparedStatement queryBookmarkById;
   private PreparedStatement insertIntoBookmarks;
+  private PreparedStatement updateBookmarkById;
+  private PreparedStatement deleteBookmarkById;
 
   // Life Cycle
   private DataSource() {
@@ -61,6 +67,9 @@ public class DataSource {
       insertIntoBookmarks = connection.prepareStatement(INSERT_BOOKMARK);
       queryBookmarksByTitle = connection.prepareStatement(QUERY_BOOKMARKS_BY_TITLE);
       queryBookmarkById = connection.prepareStatement(QUERY_BOOKMARKS_BY_ID);
+      updateBookmarkById = connection.prepareStatement(UPDATE_BOOKMARK);
+      deleteBookmarkById = connection.prepareStatement(DELETE_BOOKMARK);
+
       System.out.println("Open Connection");
       return true;
     } catch (SQLException e) {
@@ -80,6 +89,12 @@ public class DataSource {
       }
       if (queryBookmarkById != null) {
         queryBookmarkById.close();
+      }
+      if (updateBookmarkById != null) {
+        updateBookmarkById.close();
+      }
+      if (deleteBookmarkById != null) {
+        deleteBookmarkById.close();
       }
       if (connection != null) {
         connection.close();
@@ -193,20 +208,20 @@ public class DataSource {
 
   private void updateBookmark(long id, String title, String info) throws SQLException {
     System.out.println("Update by ID: " + id + "\nTitle: " + title + "\nInfo: " + info);
-//    insertIntoBookmarks.setString(1, title);
-//    insertIntoBookmarks.setString(2, description);
-//    int affectedRows = insertIntoBookmarks.executeUpdate();
-//    if (affectedRows != 1) { // Only one bookmark should be added
-//      throw new SQLException("Couldn't insert bookmark");
-//    }
+    updateBookmarkById.setString(1, title);
+    updateBookmarkById.setString(2, info);
+    updateBookmarkById.setLong(3, id);
+    int affectedRows = updateBookmarkById.executeUpdate();
+    if (affectedRows != 1) { // Only one bookmark should be updated.
+      throw new SQLException("Couldn't update bookmark");
+    }
   }
 
   private void deleteBookmark(long bookmarkId) throws SQLException {
-//    insertIntoBookmarks.setString(1, title);
-//    insertIntoBookmarks.setString(2, description);
-//    int affectedRows = insertIntoBookmarks.executeUpdate();
-//    if (affectedRows != 1) { // Only one bookmark should be added
-//      throw new SQLException("Couldn't insert bookmark");
-//    }
+    deleteBookmarkById.setLong(1, bookmarkId);
+    int affectedRows = deleteBookmarkById.executeUpdate();
+    if (affectedRows != 1) { // Only one bookmark should be deleted.
+      throw new SQLException("Couldn't delete bookmark");
+    }
   }
 }

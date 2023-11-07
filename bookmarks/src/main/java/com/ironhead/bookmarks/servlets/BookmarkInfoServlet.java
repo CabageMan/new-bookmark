@@ -51,7 +51,11 @@ public class BookmarkInfoServlet extends HttpServlet {
 
     if (buttonValue.equals(DELETE_BOOKMARK_BUTTON)) {
       System.out.println("Delete Bookmark by ID: " + bookmark.getId());
-      request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
+      if (dataSource.deleteBookmark(bookmark)) {
+        request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
+      } else {
+        request.getRequestDispatcher("/bookmarkInfo.jsp").include(request, response);
+      }
     } else if (buttonValue.equals(EDIT_BOOKMARK_BUTTON)) {
       request.setAttribute("bookmark", bookmark);
       request.getRequestDispatcher("/bookmarkEdit.jsp").forward(request, response);
@@ -62,6 +66,7 @@ public class BookmarkInfoServlet extends HttpServlet {
   }
 
   public void destroy() {
+    dataSource.removeInstance();
     System.out.println("Bookmark Info Servlet Destroy is called");
   }
 }

@@ -43,8 +43,11 @@ public class BookmarkEditServlet extends HttpServlet {
       String bookmarkTitle = request.getParameter(BOOKMARK_TITLE_FIELD);
       String bookmarkDescription = request.getParameter(BOOKMARK_DESCRIPTION_FIELD);
       Bookmark updatedBookmark = new Bookmark(bookmarkId, bookmarkTitle, bookmarkDescription);
-      dataSource.updateBookmark(updatedBookmark);
-      request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
+      if (dataSource.updateBookmark(updatedBookmark)) {
+        request.getRequestDispatcher("/bookmarksList.jsp").forward(request, response);
+      } else {
+        request.getRequestDispatcher("/bookmarkEdit.jsp").include(request, response);
+      }
     } else {
       System.out.println("BookmarkEdit: Something went wrong");
       request.getRequestDispatcher("/bookmarkEdit.jsp").include(request, response);
@@ -52,6 +55,7 @@ public class BookmarkEditServlet extends HttpServlet {
   }
 
   public void destroy() {
+    dataSource.removeInstance();
     System.out.println("Bookmark Edit Servlet Destroy is called");
   }
 }

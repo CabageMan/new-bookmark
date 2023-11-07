@@ -55,6 +55,7 @@
     <tbody>
     <% List<Bookmark> bookmarks = (List) request.getAttribute("bookmarks"); %>
 
+    <% if (bookmarks != null) { %>
     <% for (Bookmark bookmark : bookmarks) { %>
     <tr>
         <td><%=bookmark.getId()%></td>
@@ -63,6 +64,7 @@
         </td>
         <td><%=bookmark.getInfo()%></td>
     </tr>
+    <% } %>
     <% } %>
     </tbody>
 </table>
